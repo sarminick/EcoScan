@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Mis Tareas</string>
+    <string name="hint_task">Escribe una nueva tarea...</string>
+    <string name="btn_add">Agregar</string>
+    <string name="empty_tasks">¡No tienes tareas pendientes!</string>
+    <string name="delete_task_confirm">¿Eliminar esta tarea?</string>
+    <string name="delete">Eliminar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="empty_field_warning">Por favor, escribe una tarea.</string>
+</resources>
