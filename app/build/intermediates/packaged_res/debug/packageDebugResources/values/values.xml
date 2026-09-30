@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="http://schemas.android.com/tools">
+    <color name="bg_light">#F8FAFC</color>
+    <color name="bin_black_non_recyclable">#1E293B</color>
+    <color name="bin_green_organic">#2E7D32</color>
+    <color name="bin_white_clean">#FFFFFF</color>
+    <color name="bin_white_stroke">#CBD5E1</color>
+    <color name="black">#000000</color>
+    <color name="cat_glass">#0D9488</color>
+    <color name="cat_metal">#64748B</color>
+    <color name="cat_organic">#16A34A</color>
+    <color name="cat_paper">#D97706</color>
+    <color name="cat_plastic">#0284C7</color>
+    <color name="divider">#E2E8F0</color>
+    <color name="surface_card">#FFFFFF</color>
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="unisimon_accent">#00A859</color>
+    <color name="unisimon_gold">#F59E0B</color>
+    <color name="unisimon_green">#007A3D</color>
+    <color name="unisimon_green_dark">#00562A</color>
+    <color name="unisimon_green_light">#E8F5E9</color>
+    <color name="unisimon_green_soft">#F0FDF4</color>
+    <color name="white">#FFFFFF</color>
+    <string name="app_name">EcoScan Unisimón</string>
+    <string name="app_subtitle">Campus Sostenible &amp; Reciclaje Inteligente</string>
+    <string name="cat_glass_desc">Botellas, frascos enteros de bebidas o alimentos.</string>
+    <string name="cat_glass_title">Vidrio</string>
+    <string name="cat_organic_desc">Restos de frutas, cáscaras y residuos vegetales.</string>
+    <string name="cat_organic_title">Orgánicos</string>
+    <string name="cat_paper_desc">Cuadernos, cajas, hojas secas y limpias.</string>
+    <string name="cat_paper_title">Papel y Cartón</string>
+    <string name="cat_plastic_desc">Botellas PET, tapas, envases limpios.</string>
+    <string name="cat_plastic_title">Plástico</string>
+    <string name="home_btn_scan">Escanear con IA</string>
+    <string name="home_categories_title">Categorías de Residuos</string>
+    <string name="home_greeting">¡Hola, Comunidad Unisimón!</string>
+    <string name="home_prompt">Escanea tus residuos y conoce dónde y cómo depositarlos correctamente.</string>
+    <string name="home_tips_title">Tips de Sostenibilidad</string>
+    <string name="map_filter_all">Todos</string>
+    <string name="map_filter_black">Caneca Negra</string>
+    <string name="map_filter_green">Caneca Verde</string>
+    <string name="map_filter_white">Caneca Blanca</string>
+    <string name="map_subtitle">Encuentra los puntos ecológicos más cercanos en el campus</string>
+    <string name="map_title">Puntos de Reciclaje Unisimón</string>
+    <string name="nav_guide">Guía</string>
+    <string name="nav_home">Inicio</string>
+    <string name="nav_map">Puntos Verdes</string>
+    <string name="nav_scan">Escanear</string>
+    <string name="scan_btn_capture">Tomar Foto</string>
+    <string name="scan_btn_gallery">Elegir de Galería</string>
+    <string name="scan_hint">Apunta la cámara al objeto que deseas reciclar</string>
+    <string name="scan_result_bin">Caneca correspondiente (Norma Colombia):</string>
+    <string name="scan_result_btn_map">Ver puntos ecológicos en el campus</string>
+    <string name="scan_result_btn_new">Escanear otro residuo</string>
+    <string name="scan_result_detected">Objeto detectado:</string>
+    <string name="scan_result_instructions">Instrucciones de desecho:</string>
+    <string name="scan_result_recyclable">¿Es reciclable?</string>
+    <string name="scan_result_title">Resultado del Escaneo</string>
+    <string name="scan_simulating">Analizando objeto con modelo de IA...</string>
+    <string name="scan_title">Escanear Objeto con IA</string>
+    <string name="university_name">Universidad Simón Bolívar</string>
+    <style name="Theme.EcoScanUnisimon" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        <item name="colorPrimary">@color/unisimon_green</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/unisimon_green_light</item>
+        <item name="colorOnPrimaryContainer">@color/unisimon_green_dark</item>
+
+        
+        <item name="colorSecondary">@color/unisimon_accent</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        
+        <item name="android:statusBarColor">@color/unisimon_green_dark</item>
+        <item name="android:windowLightStatusBar" ns1:targetApi="m">false</item>
+    </style>
+</resources>

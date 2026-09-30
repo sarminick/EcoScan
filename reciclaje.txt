@@ -1,0 +1,52 @@
+App de Reciclaje (EcoScan) 
+Idea general
+
+Aplicación móvil de desarrollo sostenible que usa IA para escanear un objeto y ayudar al usuario a reciclarlo correctamente.
+
+Funcionalidades principales
+Escaneo con IA
+El usuario toma una foto del objeto con la cámara
+Un modelo de IA preentrenado clasifica el objeto 
+
+Categorías: plástico, vidrio, papel, orgánico
+Resultado del escaneo
+La app indica si el objeto es reciclable
+Muestra en qué categoría entra
+Da instrucciones de cómo desecharlo correctamente
+
+Mapa de puntos de reciclaje 
+Muestra en un mapa los puntos de reciclaje cercanos al usuario
+Stack técnico:
+Lenguaje: Java 
+IA: modelo de clasificación de imágenes preentrenado (ej. TensorFlow Lite + dataset tipo TrashNet, a definir)
+Mapa: Google Maps API u OpenStreetMap (a definir)
+
+Qué se necesita para montar la app
+Herramientas de desarrollo
+Android Studio (IDE oficial para desarrollo Android con Java)
+SDK de Android (se instala junto con Android Studio)
+Emulador o dispositivo físico para pruebas
+Git/GitHub para control de versiones y trabajo en equipo
+
+Componentes técnicos del proyecto
+Módulo de cámara — acceso a la cámara del dispositivo para capturar la foto del objeto
+Modelo de IA / clasificador de imágenes — modelo preentrenado (ej. TensorFlow Lite) integrado en la app para identificar el material
+Base de datos — para guardar categorías, instrucciones de desecho y ubicación de puntos de reciclaje (puede ser local con SQLite/Room, o en la nube con Firebase)
+API de mapas — Google Maps API u OpenStreetMap para mostrar los puntos de reciclaje
+Permisos del dispositivo — cámara y ubicación (GPS)
+Recursos externos
+Dataset de imágenes de residuos para entrenar o ajustar el modelo (ej. TrashNet)
+Datos de puntos de reciclaje de la ciudad (abiertos si existen, o recopilados manualmente por el equipo)
+Cuenta de desarrollador si van a usar servicios como Firebase o Google Maps API 
+
+Equipo / roles sugeridos
+Alguien enfocado en la parte de IA/clasificación
+Alguien enfocado en la interfaz (UI/UX) y navegación de la app
+Alguien enfocado en el mapa y la base de datos de puntos de reciclaje
+Alguien enfocado en integración general y pruebas
+
+Pendiente por definir en equipo
+Qué modelo preentrenado específico van a usar y si necesita ajuste (fine-tuning)
+Fuente de datos para los puntos de reciclaje en el mapa 
+Pantallas / flujo de navegación de la app
+Reparto de tareas del equipo

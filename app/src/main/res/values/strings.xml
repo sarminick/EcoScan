@@ -1,10 +1,55 @@
 <resources>
-    <string name="app_name">Mis Tareas</string>
-    <string name="hint_task">Escribe una nueva tarea...</string>
-    <string name="btn_add">Agregar</string>
-    <string name="empty_tasks">¡No tienes tareas pendientes!</string>
-    <string name="delete_task_confirm">¿Eliminar esta tarea?</string>
-    <string name="delete">Eliminar</string>
-    <string name="cancel">Cancelar</string>
-    <string name="empty_field_warning">Por favor, escribe una tarea.</string>
+    <string name="app_name">EcoScan Unisimón</string>
+    <string name="university_name">Universidad Simón Bolívar</string>
+    <string name="app_subtitle">Campus Sostenible &amp; Reciclaje Inteligente</string>
+
+    <!-- Navegación Bottom Bar -->
+    <string name="nav_home">Inicio</string>
+    <string name="nav_scan">Escanear</string>
+    <string name="nav_map">Puntos Verdes</string>
+    <string name="nav_guide">Guía</string>
+
+    <!-- Inicio -->
+    <string name="home_greeting">¡Hola, Comunidad Unisimón!</string>
+    <string name="home_prompt">Escanea tus residuos y conoce dónde y cómo depositarlos correctamente.</string>
+    <string name="home_btn_scan">Escanear con IA</string>
+    <string name="home_categories_title">Categorías de Residuos</string>
+    <string name="home_tips_title">Tips de Sostenibilidad</string>
+
+    <!-- Categorías -->
+    <string name="cat_plastic_title">Plástico</string>
+    <string name="cat_plastic_desc">Botellas PET, tapas, envases limpios.</string>
+
+    <string name="cat_paper_title">Papel y Cartón</string>
+    <string name="cat_paper_desc">Cuadernos, cajas, hojas secas y limpias.</string>
+
+    <string name="cat_glass_title">Vidrio</string>
+    <string name="cat_glass_desc">Botellas, frascos enteros de bebidas o alimentos.</string>
+
+    <string name="cat_organic_title">Orgánicos</string>
+    <string name="cat_organic_desc">Restos de frutas, cáscaras y residuos vegetales.</string>
+
+    <!-- Escáner -->
+    <string name="scan_title">Escanear Objeto con IA</string>
+    <string name="scan_hint">Apunta la cámara al objeto que deseas reciclar</string>
+    <string name="scan_btn_capture">Tomar Foto</string>
+    <string name="scan_btn_gallery">Elegir de Galería</string>
+    <string name="scan_simulating">Analizando objeto con modelo de IA...</string>
+
+    <!-- Resultado Escáner -->
+    <string name="scan_result_title">Resultado del Escaneo</string>
+    <string name="scan_result_detected">Objeto detectado:</string>
+    <string name="scan_result_recyclable">¿Es reciclable?</string>
+    <string name="scan_result_bin">Caneca correspondiente (Norma Colombia):</string>
+    <string name="scan_result_instructions">Instrucciones de desecho:</string>
+    <string name="scan_result_btn_map">Ver puntos ecológicos en el campus</string>
+    <string name="scan_result_btn_new">Escanear otro residuo</string>
+
+    <!-- Mapa y Puntos -->
+    <string name="map_title">Puntos de Reciclaje Unisimón</string>
+    <string name="map_subtitle">Encuentra los puntos ecológicos más cercanos en el campus</string>
+    <string name="map_filter_all">Todos</string>
+    <string name="map_filter_white">Caneca Blanca</string>
+    <string name="map_filter_green">Caneca Verde</string>
+    <string name="map_filter_black">Caneca Negra</string>
 </resources>
