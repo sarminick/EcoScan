@@ -13,6 +13,9 @@
     <color name="bin_white_stroke">#CBD5E1</color>
     <color name="bin_green_organic">#2E7D32</color>
     <color name="bin_black_non_recyclable">#1E293B</color>
+    <color name="bin_green_bg">#DCFCE7</color>
+    <color name="bin_black_bg">#F1F5F9</color>
+    <color name="bin_black_text">#1E293B</color>
 
     <!-- Categorías -->
     <color name="cat_plastic">#0284C7</color>
@@ -20,6 +23,13 @@
     <color name="cat_paper">#D97706</color>
     <color name="cat_organic">#16A34A</color>
     <color name="cat_metal">#64748B</color>
+
+    <!-- Badges y estados -->
+    <color name="badge_recyclable_bg">#DCFCE7</color>
+    <color name="badge_recyclable_text">#15803D</color>
+    <color name="badge_non_recyclable_bg">#FEE2E2</color>
+    <color name="badge_non_recyclable_text">#DC2626</color>
+    <color name="map_mock_bg">#E2E8F0</color>
 
     <!-- UI Neutros -->
     <color name="bg_light">#F8FAFC</color>

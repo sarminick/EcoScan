@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Colores adaptados para Tema Oscuro (Night Mode) -->
+
+    <!-- Colores Institucionales Unisimón en Modo Oscuro -->
+    <color name="unisimon_green">#00A859</color>
+    <color name="unisimon_green_dark">#004D25</color>
+    <color name="unisimon_green_light">#1F3D2E</color>
+    <color name="unisimon_green_soft">#14291E</color>
+    <color name="unisimon_accent">#00C96A</color>
+    <color name="unisimon_gold">#FBBF24</color>
+
+    <!-- Código Nacional de Canecas Colombia (Res. 2184 de 2019) -->
+    <color name="bin_white_clean">#FFFFFF</color>
+    <color name="bin_white_stroke">#334155</color>
+    <color name="bin_green_organic">#4ADE80</color>
+    <color name="bin_black_non_recyclable">#CBD5E1</color>
+    <color name="bin_green_bg">#143823</color>
+    <color name="bin_black_bg">#253346</color>
+    <color name="bin_black_text">#E2E8F0</color>
+
+    <!-- Categorías (Tonos adaptados para fondo oscuro) -->
+    <color name="cat_plastic">#38BDF8</color>
+    <color name="cat_glass">#2DD4BF</color>
+    <color name="cat_paper">#FBBF24</color>
+    <color name="cat_organic">#4ADE80</color>
+    <color name="cat_metal">#94A3B8</color>
+
+    <!-- Badges y estados en Modo Oscuro -->
+    <color name="badge_recyclable_bg">#143823</color>
+    <color name="badge_recyclable_text">#4ADE80</color>
+    <color name="badge_non_recyclable_bg">#3B1E1E</color>
+    <color name="badge_non_recyclable_text">#F87171</color>
+    <color name="map_mock_bg">#1E293B</color>
+
+    <!-- UI Neutros Modo Oscuro -->
+    <color name="bg_light">#0F172A</color>
+    <color name="surface_card">#1E293B</color>
+    <color name="text_primary">#F8FAFC</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="divider">#334155</color>
+    <color name="delete_red">#F87171</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+</resources>

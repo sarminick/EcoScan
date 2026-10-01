@@ -1,0 +1,18 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Tema Oscuro para EcoScan -->
+    <style name="Theme.EcoScanUnisimon" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Colores Primarios -->
+        <item name="colorPrimary">@color/unisimon_green</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/unisimon_green_light</item>
+        <item name="colorOnPrimaryContainer">@color/unisimon_green_dark</item>
+
+        <!-- Color Secundario y Acento -->
+        <item name="colorSecondary">@color/unisimon_accent</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Barra de estado oscura -->
+        <item name="android:statusBarColor">@color/unisimon_green_dark</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+    </style>
+</resources>
