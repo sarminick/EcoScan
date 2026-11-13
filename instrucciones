@@ -1,0 +1,35 @@
+Revisa las capturas de pantalla que dejé en la carpeta instrucciones para que veas el estado actual de la interfaz. La aplicación no está quedando intuitiva ni limpia a nivel de UX/UI; necesito que refactorices la navegación, los flujos y el estilo visual siguiendo estas indicaciones exactas:
+
+1. Ícono de la aplicación (logoapp.png)
+
+    Configura el archivo logoapp.png únicamente como el ícono de la aplicación (launcher icon / app icon en el dispositivo). No lo pongas dentro de la interfaz ni en la cabecera.
+
+2. Eliminación de botones y accesos redundantes
+
+    Problema actual: La acción de reportar un punto está repetida en cuatro lugares distintos: en el botón "Reportar punto" de la pantalla de inicio, en el botón flotante "Agregar punto" dentro de Puntos Verdes, y dentro del menú de configuración (engranaje) como "Reportar punto de reciclaje". Lo mismo pasa con "Mis reportes", que aparece tanto en el engranaje como dentro de la vista de perfil.
+
+    Solución: Elimina todos esos botones y accesos duplicados de la pantalla de inicio y del menú del engranaje. Centraliza las acciones donde realmente tienen sentido lógico.
+
+3. Menú desplegable (Popup) en el Avatar de Perfil
+
+    Problema actual: Al tocar el avatar con las iniciales (JA) en la barra superior, abre una pantalla completa aislada que deja marcada la pestaña "Puntos Verdes" abajo, no tiene botón de retroceso o cierre, y obliga a tocar "Inicio" para poder salir. Además, no hay opción para cerrar sesión.
+
+    Solución: Cambia ese comportamiento. Al hacer clic en el avatar (JA), debe desplegarse un menú popup flotante (como el del engranaje, pero bien estilizado) con únicamente tres opciones directas:
+
+        Perfil (que lleve a la vista de datos de la cuenta y restablecer contraseña, pero con un botón claro para volver/cerrar).
+
+        Mis reportes
+
+        Cerrar sesión
+
+4. Integración de "Reportar punto" en la vista del Mapa
+
+    Problema actual: El flujo de reporte está suelto por toda la app y la pantalla actual de Puntos Verdes se ve desordenada y saturada.
+
+    Solución: La opción para reportar o agregar un punto de reciclaje debe vivir exclusivamente dentro de la vista del Mapa (en la sección Puntos Verdes). Aunque el mapa interactivo aún no esté implementado, deja creada y maquetada la plantilla/contenedor del mapa en esa vista, integrando allí el botón principal para abrir el formulario de "Reportar punto".
+
+5. Modernización visual (Estilo Glassmorphism / Bordes redondeados)
+
+    Problema actual: Los menús desplegables (como el del engranaje) y modales tienen esquinas muy cuadradas, fondos sólidos planos y textos que se cortan (ej. "Selecciona la s..", "Selecciona el bl..").
+
+    Solución: Aplica bordes mucho más redondeados (border-radius amplios) y un acabado semitransparente con desenfoque de fondo (glassmorphism / translucidez) en los popups, menús desplegables, tarjetas y hojas modales para darle un aspecto moderno y pulido. Asegúrate también de corregir los textos truncados en los selectores del formulario de reporte.

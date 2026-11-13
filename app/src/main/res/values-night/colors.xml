@@ -4,7 +4,8 @@
 
     <!-- Colores Institucionales Unisimón en Modo Oscuro -->
     <color name="unisimon_green">#00A859</color>
-    <color name="unisimon_green_dark">#004D25</color>
+    <!-- Used as text over the navy surface: keep an accessible light emerald contrast. -->
+    <color name="unisimon_green_dark">#86EFAC</color>
     <color name="unisimon_green_light">#1F3D2E</color>
     <color name="unisimon_green_soft">#14291E</color>
     <color name="unisimon_accent">#00C96A</color>

@@ -2,9 +2,12 @@
 .gradle/
 build/
 */build/
+.jdk-17/
 
 # Local configuration
 local.properties
+app/google-services.json
+firebase/tests/node_modules/
 
 # Android Studio / IntelliJ
 .idea/

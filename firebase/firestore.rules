@@ -1,0 +1,89 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isUnisimon() { return signedIn() && request.auth.token.email.matches('.*@unisimon[.]edu[.]co$'); }
+    function verifiedUnisimon() { return isUnisimon() && request.auth.token.email_verified == true; }
+    function role() { return signedIn() && request.auth.token.keys().hasAll(['role']) ? request.auth.token.role : 'user'; }
+    function admin() { return role() == 'admin' || role() == 'superadmin'; }
+    function superadmin() { return role() == 'superadmin'; }
+
+    function text(value, minimum, maximum) { return value is string && value.size() >= minimum && value.size() <= maximum; }
+    function serverTime(value) { return value is timestamp && value == request.time; }
+    function validStatus(status) { return status in ['pending', 'approved', 'rejected']; }
+    function validReviewStatus(status) { return status in ['approved', 'rejected']; }
+
+    function validConfirmationUpdate(reportId) {
+      let oldData = resource.data;
+      let newData = request.resource.data;
+      return verifiedUnisimon()
+        && oldData.status == 'pending'
+        && request.auth.uid != oldData.userId
+        && !(request.auth.uid in oldData.confirmations)
+        && (request.auth.uid in newData.confirmations)
+        && newData.confirmationsCount == oldData.confirmationsCount + 1
+        && (newData.confirmationsCount >= 2 ? newData.status == 'approved' : newData.status == 'pending')
+        && newData.diff(oldData).affectedKeys().hasOnly(['confirmations', 'confirmationsCount', 'status', 'approvedAt', 'approvedBy', 'updatedAt']);
+    }
+
+    match /users/{uid} {
+      allow create: if isUnisimon() && request.auth.uid == uid
+        && request.resource.data.uid == uid
+        && text(request.resource.data.name, 0, 80)
+        && request.resource.data.email == request.auth.token.email
+        && text(request.resource.data.email, 3, 254)
+        && serverTime(request.resource.data.createdAt);
+      allow read: if signedIn() && (request.auth.uid == uid || superadmin());
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name'])
+        && text(request.resource.data.name, 0, 80);
+      allow delete: if false;
+    }
+
+    match /reports/{reportId} {
+      allow create: if verifiedUnisimon()
+        && request.resource.data.id == reportId
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.confirmationsCount == 0
+        && serverTime(request.resource.data.createdAt)
+        && serverTime(request.resource.data.updatedAt);
+      allow read: if signedIn();
+      allow update: if (admin() && resource.data.status == 'pending') || validConfirmationUpdate(reportId);
+      allow delete: if superadmin();
+    }
+
+    match /recycling_points/{pointId} {
+      allow read: if resource.data.active == true || admin();
+      allow create: if admin() || (verifiedUnisimon() && getAfter(/databases/$(database)/documents/reports/$(pointId)).data.status == 'approved');
+      allow update: if admin() || (verifiedUnisimon() && getAfter(/databases/$(database)/documents/reports/$(pointId)).data.status == 'approved');
+      allow delete: if superadmin();
+    }
+
+    match /report_history/{historyId} {
+      allow read: if admin();
+      allow create: if admin();
+      allow update, delete: if false;
+    }
+    match /admin_history/{historyId} {
+      allow read: if superadmin();
+      allow create: if admin();
+      allow update, delete: if false;
+    }
+    match /notifications/{notificationId} {
+      allow read: if signedIn() && resource.data.userId == request.auth.uid;
+      allow create: if admin() || verifiedUnisimon();
+      allow update, delete: if false;
+    }
+    match /role_change_requests/{requestId} {
+      allow read: if superadmin();
+      allow create: if superadmin()
+        && text(request.resource.data.targetEmail, 3, 254)
+        && request.resource.data.action in ['grant_admin', 'revoke_admin']
+        && request.resource.data.requestedBy == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && serverTime(request.resource.data.createdAt);
+      allow update, delete: if false;
+    }
+  }
+}

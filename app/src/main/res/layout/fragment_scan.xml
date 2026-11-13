@@ -44,15 +44,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <!-- Vista previa simulada de cámara -->
-                <ImageView
-                    android:id="@+id/ivPreview"
+                <!-- Vista previa de cámara real, proporcionada por CameraX -->
+                <androidx.camera.view.PreviewView
+                    android:id="@+id/cameraPreview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/logo_unisimon_new"
-                    android:alpha="0.15"
-                    android:contentDescription="Vista previa" />
+                    android:contentDescription="Vista previa de cámara" />
 
                 <!-- Marco de enfoque verde -->
                 <View
@@ -209,6 +206,28 @@
                     app:chipIconVisible="true"
                     android:text="Servilleta Sucia"
                     style="@style/Widget.Material3.Chip.Assist" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipElectronic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:chipIcon="@drawable/ic_settings"
+                    app:chipIconTint="@color/unisimon_green"
+                    app:chipIconVisible="true"
+                    android:text="Aparato electrónico"
+                    style="@style/Widget.Material3.Chip.Assist" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipBulb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:chipIcon="@drawable/ic_recycling"
+                    app:chipIconTint="@color/unisimon_gold"
+                    app:chipIconVisible="true"
+                    android:text="Bombilla"
+                    style="@style/Widget.Material3.Chip.Assist" />
             </LinearLayout>
         </HorizontalScrollView>
 
@@ -337,13 +356,51 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginTop="14dp"
-                    android:text="@string/scan_result_btn_map"
+                    android:text="Ir al punto más cercano"
                     android:textSize="13sp"
                     android:backgroundTint="@color/unisimon_green"
                     android:textColor="@color/white"
                     app:icon="@drawable/ic_nav_map"
                     app:iconTint="@color/white"
                     app:cornerRadius="10dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Sugerencia colaborativa discreta tras resultado -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardSuggestReport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="1dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/unisimon_green_light"
+            app:cardBackgroundColor="@color/unisimon_green_soft"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="¿Conoces un punto nuevo o ha cambiado alguno? Ayúdanos a mantener actualizado el mapa reportándolo."
+                    android:textColor="@color/unisimon_green_dark"
+                    android:textSize="13sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSuggestReport"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="4dp"
+                    android:text="Reportar punto aquí"
+                    android:textColor="@color/unisimon_green" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

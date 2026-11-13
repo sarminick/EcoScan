@@ -4,50 +4,37 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseUser;
 
 public class HomeFragment extends Fragment {
-
-    public HomeFragment() {
-        // Constructor público vacío requerido
-    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View v = inflater.inflate(R.layout.fragment_home, container, false);
+        MainActivity a = (MainActivity) requireActivity();
 
-        MaterialButton btnGoToScan = view.findViewById(R.id.btnGoToScan);
-        MaterialCardView cardCategoryPlastic = view.findViewById(R.id.cardCategoryPlastic);
-        MaterialCardView cardCategoryGlass = view.findViewById(R.id.cardCategoryGlass);
-        MaterialCardView cardCategoryPaper = view.findViewById(R.id.cardCategoryPaper);
-        MaterialCardView cardCategoryOrganic = view.findViewById(R.id.cardCategoryOrganic);
+        TextView greeting = v.findViewById(R.id.tvHomeGreeting);
+        if (a.isGuest()) {
+            greeting.setText("Bienvenido, invitado");
+        } else {
+            FirebaseUser u = FirebaseGateway.auth().getCurrentUser();
+            String name = u != null && u.getDisplayName() != null && !u.getDisplayName().isEmpty()
+                    ? u.getDisplayName().split(" ")[0]
+                    : "estudiante";
+            greeting.setText("¡Hola, " + name + "!");
+        }
 
-        // Navegación directa hacia el escáner
-        btnGoToScan.setOnClickListener(v -> {
-            if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).selectTab(R.id.nav_scan);
-            }
-        });
+        v.findViewById(R.id.btnGoToScan).setOnClickListener(x -> a.selectTab(R.id.nav_scan));
+        v.findViewById(R.id.btnHomePoints).setOnClickListener(x -> a.selectTab(R.id.nav_map));
+        v.findViewById(R.id.btnHomeReport).setOnClickListener(x -> a.openReport());
 
-        // Clics en tarjetas llevan a la Guía Ambiental
-        View.OnClickListener goToGuideListener = v -> {
-            if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).selectTab(R.id.nav_guide);
-            }
-        };
-
-        cardCategoryPlastic.setOnClickListener(goToGuideListener);
-        cardCategoryGlass.setOnClickListener(goToGuideListener);
-        cardCategoryPaper.setOnClickListener(goToGuideListener);
-        cardCategoryOrganic.setOnClickListener(goToGuideListener);
-
-        return view;
+        return v;
     }
 }

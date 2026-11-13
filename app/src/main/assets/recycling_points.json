@@ -1,0 +1,38 @@
+[
+  {
+    "id": "sede3-bloque-c-plasticos",
+    "name": "Punto 1 — Sede 3, bloque C",
+    "site": "Sede 3",
+    "location": "Dentro del bloque C.",
+    "bins": "white",
+    "materials": "Tapas de botellas y botellas plásticas.",
+    "type": "plastic"
+  },
+  {
+    "id": "sede2-ascensor-plasticos",
+    "name": "Punto 2 — Sede 2, primer piso",
+    "site": "Sede 2",
+    "location": "Primer piso, junto al ascensor.",
+    "bins": "white",
+    "materials": "Botellas plásticas.",
+    "type": "plastic"
+  },
+  {
+    "id": "sede2-entrada-eco-computa",
+    "name": "Punto 3 — ECO COMPUTA",
+    "site": "Sede 2",
+    "location": "Entrada de la sede 2; junto a un recolector de bombillas.",
+    "bins": "special",
+    "materials": "ECO COMPUTA recibe exclusivamente aparatos eléctricos y electrónicos (no pilas ni baterías). Junto a él hay un recolector de bombillas.",
+    "type": "electronics, bulbs"
+  },
+  {
+    "id": "sede2-enfrente-eco-computa",
+    "name": "Punto 4 — Canecas de separación",
+    "site": "Sede 2",
+    "location": "Enfrente de ECO COMPUTA y del recolector de bombillas.",
+    "bins": "white, black",
+    "materials": "Caneca blanca: residuos aprovechables limpios y secos. Caneca negra: residuos no aprovechables.",
+    "type": "general"
+  }
+]

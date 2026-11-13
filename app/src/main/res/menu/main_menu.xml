@@ -8,11 +8,6 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_tips"
-        android:title="Guía Rápida de Separación"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/action_impact"
         android:title="Impacto Ecológico Unisimón"
         app:showAsAction="never" />
@@ -22,4 +17,8 @@
         android:title="Acerca de EcoScan"
         app:showAsAction="never" />
 
+    <item android:id="@+id/action_account" android:title="Cuenta" app:showAsAction="never" />
+    <item android:id="@+id/action_report" android:title="Reportar punto de reciclaje" app:showAsAction="never" />
+    <item android:id="@+id/action_my_reports" android:title="Mis reportes" app:showAsAction="never" />
 </menu>
+

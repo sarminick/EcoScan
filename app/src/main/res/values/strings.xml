@@ -49,7 +49,7 @@
     <string name="map_title">Puntos de Reciclaje Unisimón</string>
     <string name="map_subtitle">Encuentra los puntos ecológicos más cercanos en el campus</string>
     <string name="map_filter_all">Todos</string>
-    <string name="map_filter_white">Caneca Blanca</string>
-    <string name="map_filter_green">Caneca Verde</string>
-    <string name="map_filter_black">Caneca Negra</string>
+    <string name="map_filter_white">Sede 2</string>
+    <string name="map_filter_green">Sede 3</string>
+    <string name="map_filter_black">Plásticos</string>
 </resources>

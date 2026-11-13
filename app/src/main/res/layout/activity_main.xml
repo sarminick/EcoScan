@@ -63,13 +63,48 @@
             <!-- Botón de configuraciones/opciones -->
             <ImageButton
                 android:id="@+id/btnSettings"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_settings"
                 android:tint="@color/white"
                 android:contentDescription="Configuraciones"
                 android:padding="8dp" />
+
+            <!-- Avatar circular moderno institucional (38dp) -->
+            <FrameLayout
+                android:id="@+id/btnToolbarAvatar"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/bg_avatar_circle"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Perfil de usuario">
+
+                <!-- Icono de usuario para modo invitado / sin sesión -->
+                <ImageView
+                    android:id="@+id/ivAvatarGuest"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_user_guest"
+                    android:contentDescription="Usuario"
+                    app:tint="@color/white" />
+
+                <!-- Iniciales para usuario con sesión -->
+                <TextView
+                    android:id="@+id/tvAvatarInitials"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </FrameLayout>
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
