@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             ivAvatarGuest.setVisibility(View.GONE);
             tvAvatarInitials.setVisibility(View.VISIBLE);
             tvAvatarInitials.setText(extractInitials(user));
-            btnToolbarAvatar.setOnClickListener(v -> openProfile());
+            btnToolbarAvatar.setOnClickListener(this::showAvatarPopupMenu);
         }
     }
 
@@ -283,38 +283,67 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
+    /** Avatar popup menu: Perfil, Mis reportes, Cerrar sesión. */
+    private void showAvatarPopupMenu(View anchor) {
+        View popupView = getLayoutInflater().inflate(R.layout.popup_avatar_menu, null);
+        android.widget.PopupWindow popup = new android.widget.PopupWindow(
+                popupView,
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+                true
+        );
+        popup.setElevation(16f);
+        popup.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
+        popup.setOutsideTouchable(true);
+
+        popupView.findViewById(R.id.menuAvatarProfile).setOnClickListener(v -> {
+            popup.dismiss();
+            openProfile();
+        });
+        popupView.findViewById(R.id.menuAvatarMyReports).setOnClickListener(v -> {
+            popup.dismiss();
+            openMyReports();
+        });
+        popupView.findViewById(R.id.menuAvatarLogout).setOnClickListener(v -> {
+            popup.dismiss();
+            if (FirebaseGateway.isConfigured(this)) {
+                FirebaseGateway.auth().signOut();
+            }
+            showWelcome();
+        });
+
+        popup.showAsDropDown(anchor, 0, 12);
+    }
+
     /** Settings menu. */
     private void showOptionsMenu(View anchor) {
-        PopupMenu popup = new PopupMenu(this, anchor);
-        popup.getMenuInflater().inflate(R.menu.main_menu, popup.getMenu());
-        popup.getMenu().removeItem(R.id.action_account);
-        popup.setOnMenuItemClickListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.action_toggle_theme) {
-                boolean next = !getSharedPreferences("EcoScanPrefs", MODE_PRIVATE).getBoolean("dark_mode", false);
-                getSharedPreferences("EcoScanPrefs", MODE_PRIVATE).edit().putBoolean("dark_mode", next).apply();
-                AppCompatDelegate.setDefaultNightMode(next ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
-                return true;
-            }
-            if (id == R.id.action_report) {
-                openReport();
-                return true;
-            }
-            if (id == R.id.action_my_reports) {
-                openMyReports();
-                return true;
-            }
-            if (id == R.id.action_impact) {
-                message("Impacto ecológico", "Cada residuo separado correctamente aporta a un campus sostenible.");
-                return true;
-            }
-            if (id == R.id.action_about) {
-                message("Acerca de EcoScan", "EcoScan · Universidad Simón Bolívar\nReciclaje inteligente para el campus.");
-                return true;
-            }
-            return false;
+        View popupView = getLayoutInflater().inflate(R.layout.popup_settings_menu, null);
+        android.widget.PopupWindow popup = new android.widget.PopupWindow(
+                popupView,
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+                true
+        );
+        popup.setElevation(16f);
+        popup.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
+        popup.setOutsideTouchable(true);
+
+        popupView.findViewById(R.id.menuSettingsTheme).setOnClickListener(v -> {
+            popup.dismiss();
+            boolean next = !getSharedPreferences("EcoScanPrefs", MODE_PRIVATE).getBoolean("dark_mode", false);
+            getSharedPreferences("EcoScanPrefs", MODE_PRIVATE).edit().putBoolean("dark_mode", next).apply();
+            AppCompatDelegate.setDefaultNightMode(next ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
         });
-        popup.show();
+        popupView.findViewById(R.id.menuSettingsImpact).setOnClickListener(v -> {
+            popup.dismiss();
+            message("Impacto ecológico", "Cada residuo separado correctamente aporta a un campus sostenible.");
+        });
+        popupView.findViewById(R.id.menuSettingsAbout).setOnClickListener(v -> {
+            popup.dismiss();
+            message("Acerca de EcoScan", "EcoScan · Universidad Simón Bolívar\nReciclaje inteligente para el campus.");
+        });
+
+        popup.showAsDropDown(anchor, 0, 12);
     }
 
     private void message(String title, String body) {

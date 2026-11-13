@@ -32,54 +32,106 @@
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
 
-            <!-- Resumen del directorio -->
+            <!-- Plantilla / Contenedor del Mapa Interactivo del Campus -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardMapContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:cardBackgroundColor="@color/surface_card"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="1dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="2dp"
                 app:strokeColor="@color/unisimon_green_light"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
+                    android:orientation="vertical">
 
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:contentDescription="Directorio"
-                        android:src="@drawable/ic_map_placeholder"
-                        app:tint="@color/unisimon_green" />
+                    <FrameLayout
+                        android:id="@+id/mapTemplateContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="190dp"
+                        android:background="@color/unisimon_green_light"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="52dp"
+                                android:layout_height="52dp"
+                                android:contentDescription="Mapa del campus"
+                                android:src="@drawable/ic_map_placeholder"
+                                app:tint="@color/unisimon_green_dark" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="Mapa interactivo del campus"
+                                android:textColor="@color/unisimon_green_dark"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvPointCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </FrameLayout>
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
 
-                        <TextView
-                            android:id="@+id/tvDirectoryTitle"
-                            android:layout_width="match_parent"
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Puntos ecológicos en el campus"
-                            android:textColor="@color/text_primary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/tvPointCount"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp" />
+                            <TextView
+                                android:id="@+id/tvDirectoryTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="¿Encontraste un punto nuevo?"
+                                android:textColor="@color/text_primary"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Ayuda a mantener el mapa actualizado"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMapReportPoint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
+                            android:layout_marginStart="12dp"
+                            android:backgroundTint="@color/unisimon_green"
+                            android:text="Reportar punto"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            app:cornerRadius="16dp"
+                            app:icon="@drawable/ic_camera"
+                            app:iconTint="@color/white" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -166,25 +218,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
 
-            <!-- Espacio para el FAB -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="80dp" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <!-- Único FAB contextual para agregar un punto -->
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fabAddPoint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:backgroundTint="@color/unisimon_green"
-        android:text="Agregar punto"
-        android:textColor="@color/white"
-        app:elevation="4dp"
-        app:icon="@drawable/ic_nav_scan"
-        app:iconTint="@color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -27,6 +27,11 @@ public class ProfileFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
         MainActivity a = (MainActivity) requireActivity();
 
+        View btnBack = v.findViewById(R.id.btnProfileBack);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(x -> requireActivity().getSupportFragmentManager().popBackStack());
+        }
+
         TextView name = v.findViewById(R.id.tvProfileName);
         TextView mail = v.findViewById(R.id.tvProfileEmail);
         TextView role = v.findViewById(R.id.tvProfileRole);

@@ -178,20 +178,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <Spinner
                 android:id="@+id/spSheetSite"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1" />
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
 
             <Spinner
                 android:id="@+id/spSheetBlock"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1" />
+                android:layout_marginTop="8dp" />
         </LinearLayout>
 
         <!-- Punto de referencia / Ubicación descriptiva -->

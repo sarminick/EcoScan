@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="220dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_glass_popup"
+    android:elevation="12dp"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/menuAvatarProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:text="Perfil"
+        android:textColor="@color/text_primary"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="12dp"
+        android:background="#1A000000" />
+
+    <TextView
+        android:id="@+id/menuAvatarMyReports"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:text="Mis reportes"
+        android:textColor="@color/text_primary"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="12dp"
+        android:background="#1A000000" />
+
+    <TextView
+        android:id="@+id/menuAvatarLogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:text="Cerrar sesión"
+        android:textColor="#C62828"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

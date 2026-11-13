@@ -38,7 +38,7 @@ public class MapFragment extends Fragment implements PointDetailBottomSheetDialo
         empty = view.findViewById(R.id.tvEmptyPoints);
         count = view.findViewById(R.id.tvPointCount);
 
-        view.findViewById(R.id.fabAddPoint).setOnClickListener(v -> {
+        view.findViewById(R.id.btnMapReportPoint).setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
                 ((MainActivity) getActivity()).openReportBottomSheet(null);
             }

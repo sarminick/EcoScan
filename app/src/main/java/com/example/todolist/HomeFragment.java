@@ -33,7 +33,6 @@ public class HomeFragment extends Fragment {
 
         v.findViewById(R.id.btnGoToScan).setOnClickListener(x -> a.selectTab(R.id.nav_scan));
         v.findViewById(R.id.btnHomePoints).setOnClickListener(x -> a.selectTab(R.id.nav_map));
-        v.findViewById(R.id.btnHomeReport).setOnClickListener(x -> a.openReport());
 
         return v;
     }
