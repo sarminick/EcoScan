@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Colores Institucionales Universidad Simón Bolívar (Colombia) -->
+    <color name="ic_launcher_background">#F3F0E4</color>
     <color name="unisimon_green">#007A3D</color>
     <color name="unisimon_green_dark">#00562A</color>
     <color name="unisimon_green_light">#E8F5E9</color>

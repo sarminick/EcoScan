@@ -270,6 +270,37 @@ public class MainActivity extends AppCompatActivity {
         navigation.setSelectedItemId(id);
     }
 
+    public void setBarsVisibility(boolean visible) {
+        float alpha = visible ? 1f : 0f;
+        int duration = 300;
+        if (toolbar != null) {
+            toolbar.animate()
+                    .alpha(alpha)
+                    .setDuration(duration)
+                    .withEndAction(() -> {
+                        if (!visible) toolbar.setVisibility(View.GONE);
+                    })
+                    .start();
+            if (visible) toolbar.setVisibility(View.VISIBLE);
+        }
+        if (navigation != null) {
+            navigation.animate()
+                    .alpha(alpha)
+                    .setDuration(duration)
+                    .withEndAction(() -> {
+                        if (!visible) navigation.setVisibility(View.GONE);
+                    })
+                    .start();
+            if (visible) navigation.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void navigateToMapWithCategories(java.util.ArrayList<String> categories) {
+        MapFragment mapFrag = MapFragment.newInstance(categories);
+        showApp(mapFrag);
+        navigation.setSelectedItemId(R.id.nav_map);
+    }
+
     private void showApp(Fragment f) {
         toolbar.setVisibility(View.VISIBLE);
         navigation.setVisibility(View.VISIBLE);

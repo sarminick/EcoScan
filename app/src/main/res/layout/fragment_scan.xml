@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scanScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_light"
@@ -14,26 +15,34 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/scan_title"
-            android:textColor="@color/unisimon_green_dark"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/scan_hint"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp" />
-
-        <!-- Visor de Escaneo / Cámara simulada -->
-        <com.google.android.material.card.MaterialCardView
+        <LinearLayout
+            android:id="@+id/layoutScanHeader"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/scan_title"
+                android:textColor="@color/unisimon_green_dark"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/scan_hint"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Visor de Escaneo / Cámara real -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardCameraContainer"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
             android:layout_marginTop="16dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="3dp"
@@ -41,24 +50,98 @@
             app:cardBackgroundColor="@color/surface_card">
 
             <FrameLayout
+                android:id="@+id/frameCameraContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <!-- Vista previa de cámara real, proporcionada por CameraX -->
+                <!-- Vista previa de CameraX -->
                 <androidx.camera.view.PreviewView
                     android:id="@+id/cameraPreview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="Vista previa de cámara" />
 
-                <!-- Marco de enfoque verde -->
-                <View
+                <!-- Foto congelada tras captura -->
+                <ImageView
+                    android:id="@+id/ivCapturedPhoto"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="24dp"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"
+                    android:contentDescription="Foto capturada" />
+
+                <!-- Capa de recuadros multi-objeto -->
+                <com.example.todolist.classifier.BoundingBoxOverlayView
+                    android:id="@+id/boundingBoxOverlay"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+                <!-- Marco de enfoque verde -->
+                <View
+                    android:id="@+id/viewScanFrame"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="20dp"
                     android:background="@drawable/bg_scan_frame" />
 
+                <!-- Línea de escaneo láser animada -->
+                <View
+                    android:id="@+id/viewScanLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:background="@color/unisimon_accent"
+                    android:visibility="gone" />
+
+                <!-- Badge modo sin conexión -->
+                <TextView
+                    android:id="@+id/badgeOfflineMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/bg_glass_popup"
+                    android:backgroundTint="#CC1E293B"
+                    android:paddingStart="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="4dp"
+                    android:text="Modo sin conexión · resultados aproximados"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <!-- Botón Flash superior -->
+                <ImageButton
+                    android:id="@+id/btnScanFlash"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="58dp"
+                    android:background="@drawable/bg_glass_popup"
+                    android:src="@drawable/ic_flash_on"
+                    android:contentDescription="Flash"
+                    app:tint="@color/white" />
+
+                <!-- Botón Pantalla Completa superior -->
+                <ImageButton
+                    android:id="@+id/btnScanFullscreen"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="top|end"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/bg_glass_popup"
+                    android:src="@drawable/ic_fullscreen"
+                    android:contentDescription="Pantalla completa"
+                    app:tint="@color/white" />
+
+                <!-- Estado Normal / Analizando -->
                 <LinearLayout
+                    android:id="@+id/layoutStatusNormal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -67,10 +150,10 @@
 
                     <ImageView
                         android:id="@+id/ivScanIcon"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
                         android:src="@drawable/ic_camera"
-                        android:tint="@color/unisimon_green"
+                        app:tint="@color/unisimon_green"
                         android:contentDescription="Cámara" />
 
                     <TextView
@@ -82,21 +165,150 @@
                         android:textColor="@color/unisimon_green_dark"
                         android:textSize="14sp"
                         android:textStyle="bold" />
+
+                    <ProgressBar
+                        android:id="@+id/pbScanning"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="8dp"
+                        android:indeterminateTint="@color/unisimon_green"
+                        android:visibility="gone" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCancelScan"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="4dp"
+                        android:text="Cancelar"
+                        android:textColor="@color/delete_red"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
                 </LinearLayout>
 
-                <!-- Barra de carga / análisis de IA -->
-                <ProgressBar
-                    android:id="@+id/pbScanning"
-                    android:layout_width="wrap_content"
+                <!-- Estado: POCA_LUZ -->
+                <LinearLayout
+                    android:id="@+id/layoutPocaLuz"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:indeterminateTint="@color/unisimon_green"
-                    android:visibility="gone" />
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/ivPocaLuzIcon"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:src="@drawable/ic_lightbulb"
+                        app:tint="@color/unisimon_gold"
+                        android:contentDescription="Poca luz" />
+
+                    <TextView
+                        android:id="@+id/tvPocaLuzText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="Hay poca luz. Acércate a una ventana o activa el flash"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnPocaLuzFlash"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:backgroundTint="@color/unisimon_gold"
+                            android:text="Activar flash"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            app:cornerRadius="12dp"
+                            app:icon="@drawable/ic_flash_on"
+                            app:iconTint="@color/white" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnPocaLuzRetry"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="8dp"
+                            android:text="Reintentar"
+                            android:textSize="12sp"
+                            app:cornerRadius="12dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Estado: NO_RECONOCIDO -->
+                <LinearLayout
+                    android:id="@+id/layoutNoReconocido"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/ivNoReconocidoIcon"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:src="@drawable/ic_help_outline"
+                        app:tint="#64748B"
+                        android:contentDescription="No reconocido" />
+
+                    <TextView
+                        android:id="@+id/tvNoReconocidoText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="No pude identificarlo. Prueba con pocos objetos, más cerca y con buena luz"
+                        android:textColor="@color/text_primary"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnNoReconocidoRetry"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:backgroundTint="@color/unisimon_green"
+                            android:text="Reintentar"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            app:cornerRadius="12dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnNoReconocidoManual"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="8dp"
+                            android:text="Elegir categoría manual"
+                            android:textSize="12sp"
+                            app:cornerRadius="12dp" />
+                    </LinearLayout>
+                </LinearLayout>
             </FrameLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Botones de Acción de Cámara y Galería -->
+        <!-- Botones de Acción de Cámara y Demo -->
         <LinearLayout
+            android:id="@+id/layoutActionButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -133,115 +345,149 @@
                 app:cornerRadius="12dp" />
         </LinearLayout>
 
-        <!-- Selector rápido de ejemplos para probar el clasificador -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="O prueba con un objeto de ejemplo:"
-            android:textColor="@color/text_secondary"
-            android:textSize="12sp" />
-
-        <HorizontalScrollView
+        <!-- Selector rápido de ejemplos -->
+        <LinearLayout
+            android:id="@+id/layoutChipsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:scrollbars="none">
+            android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginTop="16dp"
+                android:text="O prueba con un objeto de ejemplo:"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipPlastic"
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:scrollbars="none">
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    app:chipIcon="@drawable/ic_category_plastic"
-                    app:chipIconTint="@color/cat_plastic"
-                    app:chipIconVisible="true"
-                    android:text="Botella Plástica PET"
-                    style="@style/Widget.Material3.Chip.Assist" />
+                    android:orientation="horizontal">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipPaper"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    app:chipIcon="@drawable/ic_category_paper"
-                    app:chipIconTint="@color/cat_paper"
-                    app:chipIconVisible="true"
-                    android:text="Caja de Cartón"
-                    style="@style/Widget.Material3.Chip.Assist" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipPlastic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        app:chipIcon="@drawable/ic_category_plastic"
+                        app:chipIconTint="@color/cat_plastic"
+                        app:chipIconVisible="true"
+                        android:text="Botella Plástica PET"
+                        style="@style/Widget.Material3.Chip.Assist" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipGlass"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    app:chipIcon="@drawable/ic_category_glass"
-                    app:chipIconTint="@color/cat_glass"
-                    app:chipIconVisible="true"
-                    android:text="Frasco de Vidrio"
-                    style="@style/Widget.Material3.Chip.Assist" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipPaper"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        app:chipIcon="@drawable/ic_category_paper"
+                        app:chipIconTint="@color/cat_paper"
+                        app:chipIconVisible="true"
+                        android:text="Caja de Cartón"
+                        style="@style/Widget.Material3.Chip.Assist" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipOrganic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    app:chipIcon="@drawable/ic_category_organic"
-                    app:chipIconTint="@color/cat_organic"
-                    app:chipIconVisible="true"
-                    android:text="Cáscara de Fruta"
-                    style="@style/Widget.Material3.Chip.Assist" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipGlass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        app:chipIcon="@drawable/ic_category_glass"
+                        app:chipIconTint="@color/cat_glass"
+                        app:chipIconVisible="true"
+                        android:text="Frasco de Vidrio"
+                        style="@style/Widget.Material3.Chip.Assist" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipNonRecyclable"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:chipIcon="@drawable/ic_bin"
-                    app:chipIconTint="@color/bin_black_non_recyclable"
-                    app:chipIconVisible="true"
-                    android:text="Servilleta Sucia"
-                    style="@style/Widget.Material3.Chip.Assist" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipOrganic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        app:chipIcon="@drawable/ic_category_organic"
+                        app:chipIconTint="@color/cat_organic"
+                        app:chipIconVisible="true"
+                        android:text="Cáscara de Fruta"
+                        style="@style/Widget.Material3.Chip.Assist" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipElectronic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    app:chipIcon="@drawable/ic_settings"
-                    app:chipIconTint="@color/unisimon_green"
-                    app:chipIconVisible="true"
-                    android:text="Aparato electrónico"
-                    style="@style/Widget.Material3.Chip.Assist" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipNonRecyclable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:chipIcon="@drawable/ic_bin"
+                        app:chipIconTint="@color/bin_black_non_recyclable"
+                        app:chipIconVisible="true"
+                        android:text="Servilleta Sucia"
+                        style="@style/Widget.Material3.Chip.Assist" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipBulb"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    app:chipIcon="@drawable/ic_recycling"
-                    app:chipIconTint="@color/unisimon_gold"
-                    app:chipIconVisible="true"
-                    android:text="Bombilla"
-                    style="@style/Widget.Material3.Chip.Assist" />
-            </LinearLayout>
-        </HorizontalScrollView>
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipElectronic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        app:chipIcon="@drawable/ic_settings"
+                        app:chipIconTint="@color/unisimon_green"
+                        app:chipIconVisible="true"
+                        android:text="Aparato electrónico"
+                        style="@style/Widget.Material3.Chip.Assist" />
 
-        <!-- Tarjeta de Resultado del Escaneo con IA (Visible tras escanear) -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardResult"
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipBulb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        app:chipIcon="@drawable/ic_recycling"
+                        app:chipIconTint="@color/unisimon_gold"
+                        app:chipIconVisible="true"
+                        android:text="Bombilla"
+                        style="@style/Widget.Material3.Chip.Assist" />
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <!-- Sección de Resultados Multi-Objeto -->
+        <LinearLayout
+            android:id="@+id/layoutResults"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvResultHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Residuos identificados"
+                android:textColor="@color/unisimon_green_dark"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Contenedor dinámico de tarjetas por cada objeto -->
+            <LinearLayout
+                android:id="@+id/containerResultsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical" />
+        </LinearLayout>
+
+        <!-- Sugerencia tras escaneo exitoso: Banner slide-up hacia Puntos Verdes -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/bannerSuggestMap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="3dp"
             app:strokeWidth="1dp"
             app:strokeColor="@color/unisimon_green_light"
-            app:cardBackgroundColor="@color/surface_card"
+            app:cardBackgroundColor="@color/unisimon_green_soft"
             android:visibility="gone">
 
             <LinearLayout
@@ -250,123 +496,55 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="¿Quieres ver dónde desechar esto en la u?"
+                    android:textColor="@color/unisimon_green_dark"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Te mostramos los puntos de reciclaje y canecas más cercanos en el campus."
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:layout_marginTop="12dp"
+                    android:gravity="end"
+                    android:orientation="horizontal">
 
-                    <!-- Icono de categoría del resultado -->
-                    <ImageView
-                        android:id="@+id/ivResultIcon"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ic_category_plastic"
-                        android:tint="@color/cat_plastic"
-                        android:contentDescription="Categoría" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="12dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/tvResultObjectName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Botella Plástica PET"
-                            android:textColor="@color/text_primary"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvResultCategory"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Categoría: Plásticos"
-                            android:textColor="@color/cat_plastic"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tvResultBadge"
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDismissSuggestMap"
+                        style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/ic_launcher_background"
-                        android:backgroundTint="@color/badge_recyclable_bg"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
-                        android:text="RECICLABLE"
-                        android:textColor="@color/badge_recyclable_text"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
+                        android:text="Descartar"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnGoToMap"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:backgroundTint="@color/unisimon_green"
+                        android:text="Ver puntos verdes"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        app:cornerRadius="12dp"
+                        app:icon="@drawable/ic_nav_map"
+                        app:iconTint="@color/white" />
                 </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
-                    android:background="@color/divider" />
-
-                <!-- Caneca recomendada -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/scan_result_bin"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/tvResultBin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="Caneca Blanca (Residuos Aprovechables)"
-                    android:textColor="@color/text_primary"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <!-- Instrucciones -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/scan_result_instructions"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/tvResultInstructions"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="1. Vacía cualquier líquido restante.\n2. Enjuaga y deja secar.\n3. Aplasta la botella para reducir su volumen y deposítala con la tapa cerrada."
-                    android:textColor="@color/text_primary"
-                    android:textSize="13sp" />
-
-                <!-- Botón de ir al mapa -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnViewMapFromScan"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="14dp"
-                    android:text="Ir al punto más cercano"
-                    android:textSize="13sp"
-                    android:backgroundTint="@color/unisimon_green"
-                    android:textColor="@color/white"
-                    app:icon="@drawable/ic_nav_map"
-                    app:iconTint="@color/white"
-                    app:cornerRadius="10dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Sugerencia colaborativa discreta tras resultado -->
+        <!-- Sugerencia colaborativa para reportar punto -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardSuggestReport"
             android:layout_width="match_parent"

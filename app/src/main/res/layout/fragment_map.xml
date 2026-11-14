@@ -16,21 +16,28 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/layoutMapHeader"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/map_title"
-                android:textColor="@color/unisimon_green_dark"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/map_subtitle"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/map_title"
+                    android:textColor="@color/unisimon_green_dark"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/map_subtitle"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
             <!-- Plantilla / Contenedor del Mapa Interactivo del Campus -->
             <com.google.android.material.card.MaterialCardView
@@ -55,6 +62,16 @@
                         android:layout_height="190dp"
                         android:background="@color/unisimon_green_light"
                         android:padding="16dp">
+
+                        <ImageButton
+                            android:id="@+id/btnMapFullscreen"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
+                            android:layout_gravity="top|end"
+                            android:background="@drawable/bg_glass_popup"
+                            android:src="@drawable/ic_fullscreen"
+                            android:contentDescription="Pantalla completa"
+                            app:tint="@color/unisimon_green_dark" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -136,87 +153,95 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Filtros contextuales -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Filtrar por sede o estado:"
-                android:textColor="@color/text_primary"
-                android:textStyle="bold" />
-
-            <HorizontalScrollView
+            <!-- Contenido inferior (filtros y lista) -->
+            <LinearLayout
+                android:id="@+id/layoutMapBottomContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:scrollbars="none">
+                android:orientation="vertical">
 
-                <com.google.android.material.chip.ChipGroup
+                <!-- Filtros contextuales -->
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:singleSelection="true">
+                    android:layout_marginTop="20dp"
+                    android:text="Filtrar por sede o estado:"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipFilterAll"
-                        style="@style/Widget.Material3.Chip.Filter"
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:scrollbars="none">
+
+                    <com.google.android.material.chip.ChipGroup
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="@string/map_filter_all" />
+                        app:singleSelection="true">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipFilterPending"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="En validación" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipFilterAll"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:text="@string/map_filter_all" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipFilterWhite"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/map_filter_white" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipFilterPending"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="En validación" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipFilterGreen"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/map_filter_green" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipFilterWhite"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/map_filter_white" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipFilterBlack"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/map_filter_black" />
-                </com.google.android.material.chip.ChipGroup>
-            </HorizontalScrollView>
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipFilterGreen"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/map_filter_green" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:text="Puntos ecológicos registrados"
-                android:textColor="@color/text_primary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipFilterBlack"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/map_filter_black" />
+                    </com.google.android.material.chip.ChipGroup>
+                </HorizontalScrollView>
 
-            <TextView
-                android:id="@+id/tvEmptyPoints"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="Puntos ecológicos registrados"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-            <!-- Lista de puntos -->
-            <LinearLayout
-                android:id="@+id/pointsContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                <TextView
+                    android:id="@+id/tvEmptyPoints"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
+
+                <!-- Lista de puntos -->
+                <LinearLayout
+                    android:id="@+id/pointsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

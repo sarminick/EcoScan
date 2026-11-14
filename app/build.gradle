@@ -47,10 +47,12 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
     // On-device image labeling. No cloud API key or uploaded photos are required.
     implementation 'com.google.mlkit:image-labeling:17.0.8'
+    implementation 'com.google.mlkit:object-detection:17.0.2'
     // Firebase is initialized only when google-services.json is supplied by the project owner.
     implementation platform('com.google.firebase:firebase-bom:33.7.0')
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-ai:17.0.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

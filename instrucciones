@@ -1,35 +1,48 @@
-Revisa las capturas de pantalla que dejé en la carpeta instrucciones para que veas el estado actual de la interfaz. La aplicación no está quedando intuitiva ni limpia a nivel de UX/UI; necesito que refactorices la navegación, los flujos y el estilo visual siguiendo estas indicaciones exactas:
+Proyecto Android (Java) "EcoScan". Existen las pantallas "Escanear" (preview de cámara con marco punteado, botones "Tomar Foto" y "Demo IA", chips de ejemplo) y "Puntos Verdes" (tarjeta de mapa interactivo del campus, botón "Reportar punto", filtros, lista de puntos). Haz SOLO lo siguiente.
 
-1. Ícono de la aplicación (logoapp.png)
+REGLAS DE AHORRO (obligatorias):
+- No leas el proyecto completo. Abre solo los archivos de Escanear, Puntos Verdes, sus layouts, la activity/navegación principal, build.gradle y AndroidManifest.
+- No refactorices, no cambies UI/estilos fuera de lo pedido, no escribas tests ni docs.
+- Sin dependencias nuevas salvo las listadas. Animaciones con APIs nativas (ValueAnimator/ObjectAnimator/ViewPropertyAnimator), nada de Lottie.
+- Trabaja en una rama/copia nueva; no toques el login de Microsoft/MSAL.
+- Responde al final con máximo 10 líneas: archivos tocados + qué falta (ej. google-services.json). Sin explicar el código.
 
-    Configura el archivo logoapp.png únicamente como el ícono de la aplicación (launcher icon / app icon en el dispositivo). No lo pongas dentro de la interfaz ni en la cabecera.
+1) CLASIFICADOR HÍBRIDO MULTI-OBJETO
+Interfaz `WasteClassifier { void classify(Bitmap bmp, Callback cb); }` donde el callback entrega `List<ClassificationResult>` (0 a 6 objetos).
+`ClassificationResult {String objeto; String categoria; boolean reciclable; float confianza; String comoDesechar; String bolsa; RectF bbox;}` con bbox normalizado 0-1 (left, top, right, bottom) relativo a la foto.
+Categorías: plastico, vidrio, papel_carton, organico, metal, no_reciclable, peligroso.
+`ClassifierRouter`: si hay internet (ConnectivityManager, NET_CAPABILITY_VALIDATED) usa `GeminiClassifier`; si no, o si Gemini falla/timeout 15 s, usa `OfflineClassifier`. Badge pequeño "Modo sin conexión · resultados aproximados" cuando use el offline.
 
-2. Eliminación de botones y accesos redundantes
+2) GeminiClassifier
+Firebase AI Logic: FirebaseAI.getInstance(GenerativeBackend.googleAI()).generativeModel("gemini-3.5-flash", cfg), GenerationConfig temperature=0.2f y responseMimeType="application/json"; usa GenerativeModelFutures. Nombre del modelo en una constante. Antes de enviar: redimensiona el bitmap a máx 1024 px y comprime a JPEG 80. Prompt (español): "Eres un clasificador de residuos para Colombia (bolsa blanca=aprovechables, negra=no aprovechables, verde=orgánicos). Detecta TODOS los residuos distintos visibles en la foto (máximo 6, ignora fondo, muebles y personas). Responde SOLO un JSON array; cada elemento: {objeto, categoria(enum anterior), reciclable(bool), confianza(0-1), como_desechar(máx 1 frase), bolsa(blanca|negra|verde), box_2d:[ymin,xmin,ymax,xmax] normalizado 0-1000}. Si no hay residuos claros responde []. Si dudas de un objeto, ponle confianza baja." Parsea con org.json; convierte box_2d a RectF 0-1 (divide entre 1000, valida que esté dentro de rango). Fuera del hilo principal.
 
-    Problema actual: La acción de reportar un punto está repetida en cuatro lugares distintos: en el botón "Reportar punto" de la pantalla de inicio, en el botón flotante "Agregar punto" dentro de Puntos Verdes, y dentro del menú de configuración (engranaje) como "Reportar punto de reciclaje". Lo mismo pasa con "Mis reportes", que aparece tanto en el engranaje como dentro de la vista de perfil.
+3) OfflineClassifier
+ML Kit Object Detection (com.google.mlkit:object-detection, modo SINGLE_IMAGE, multiple objects ON, classification OFF) para obtener cajas; recorta cada caja del bitmap y clasifícala con ML Kit Image Labeling on-device (com.google.mlkit:image-labeling, modelo incluido en el APK). Si el detector no devuelve cajas, clasifica la foto completa como un solo objeto con bbox null. Mapa estático etiqueta→categoría (botella, lata, vaso, caja, cartón, papel, periódico, bolsa, frasco, vidrio, comida, fruta, cáscara, pila, batería, etc.) con texto fijo de cómo desechar por categoría. Confianza = score de la mejor etiqueta mapeada; si ninguna mapea, 0. Máximo 6 objetos.
 
-    Solución: Elimina todos esos botones y accesos duplicados de la pantalla de inicio y del menú del engranaje. Centraliza las acciones donde realmente tienen sentido lógico.
+4) ESTADOS Y ANIMACIONES (en Escanear)
+- Por objeto: si confianza < 0.7 se muestra con estado "No estoy seguro" (borde gris punteado + botón "Elegir categoría") en vez de descartarlo. Si la lista queda vacía o TODOS son < 0.7 → estado NO_RECONOCIDO.
+- Antes de clasificar, calcula luminancia media del bitmap (muestreando píxeles). Si < 60/255 → estado POCA_LUZ sin llamar al modelo.
+- ANALIZANDO: foto congelada + línea de escaneo verde que barre de arriba a abajo en loop + pulso suave en el marco punteado. Cancelable.
+- RESULTADO: dibuja sobre la foto un recuadro por objeto con número y color según bolsa (blanca=gris claro/blanco, negra=negro, verde=verde), aparecen con pop-in escalonado (60 ms entre cada uno). Debajo, lista de tarjetas (una por objeto): número, nombre, categoría, "Bolsa blanca/negra/verde", cómo desechar. Tocar un recuadro resalta su tarjeta y viceversa. Si hay varios, encabezado "Encontré N objetos".
+- POCA_LUZ: ícono bombilla/luna con pulso, texto "Hay poca luz. Acércate a una ventana o activa el flash", botón flash (torch) y "Reintentar".
+- NO_RECONOCIDO: el marco hace "shake" corto, ícono de interrogación con fade-in, texto "No pude identificarlo. Prueba con pocos objetos, más cerca y con buena luz", botones "Reintentar" y "Elegir categoría manual" (diálogo con las 7 categorías).
+- Animaciones 300-1200 ms, sin bloquear la UI; cancelarlas al salir de la pantalla.
 
-3. Menú desplegable (Popup) en el Avatar de Perfil
+5) PANTALLA COMPLETA DE LA CÁMARA (Escanear)
+Ícono expandir/contraer en la esquina superior derecha del preview. Al tocar: anima el contenedor a ocupar toda la pantalla (oculta toolbar y bottom nav con fade; botones de captura y flash flotantes abajo). Tocar de nuevo o botón atrás lo contrae. Mismo CameraX preview, sin reiniciar la cámara. También debe poder expandirse la foto con los recuadros en el estado RESULTADO.
 
-    Problema actual: Al tocar el avatar con las iniciales (JA) en la barra superior, abre una pantalla completa aislada que deja marcada la pestaña "Puntos Verdes" abajo, no tiene botón de retroceso o cierre, y obliga a tocar "Inicio" para poder salir. Además, no hay opción para cerrar sesión.
+6) SUGERENCIA TRAS ESCANEO EXITOSO
+Cuando haya al menos un objeto con confianza ≥ 0.7, debajo de la lista muestra un banner con animación slide-up: "¿Quieres ver dónde desechar esto en la u?" con botón "Ver puntos verdes" y "Descartar". Al tocar, navega a la pestaña Puntos Verdes usando la navegación existente y pasa el conjunto de categorías detectadas (sin repetir). En Puntos Verdes, si los puntos ya tienen un campo de qué reciben ("Recibe: ..."), resalta o ordena primero los que coincidan con alguna de esas categorías; si no hay forma simple de hacerlo, solo navega.
 
-    Solución: Cambia ese comportamiento. Al hacer clic en el avatar (JA), debe desplegarse un menú popup flotante (como el del engranaje, pero bien estilizado) con únicamente tres opciones directas:
+7) PANTALLA COMPLETA DEL MAPA (Puntos Verdes)
+Ícono expandir/contraer en la esquina superior derecha de la tarjeta del "Mapa interactivo del campus". Al tocar: anima la tarjeta del mapa a pantalla completa (oculta lista, filtros y bottom nav con fade; deja visibles el botón de contraer y "Reportar punto" flotante). Los marcadores se mantienen y el mapa no se recarga. Botón atrás o el mismo ícono lo contrae. Mismo patrón de animación que el punto 5 (helper compartido solo si es simple, sin refactorizar más). Si el "mapa" actual es solo un placeholder sin mapa real, no integres uno: avísalo en el resumen.
 
-        Perfil (que lleve a la vista de datos de la cuenta y restablecer contraseña, pero con un botón claro para volver/cerrar).
+8) EXTRAS MÍNIMOS
+- Caché en memoria por hash del bitmap redimensionado.
+- Errores de red/cuota: mensaje amable + fallback al offline, nunca crash.
+- Chips de ejemplo y "Demo IA" siguen funcionando igual (también deben disparar el flujo de resultado y la sugerencia del punto 6; el demo puede devolver 2-3 objetos de ejemplo para mostrar el multi-objeto).
 
-        Mis reportes
+9) FEEDBACK
+Por cada objeto, botones pequeños "Correcto / Incorrecto"; si "Incorrecto", guarda en Firestore colección `feedback_scan` {objeto, categoria, fuente(gemini|offline), timestamp}.
 
-        Cerrar sesión
-
-4. Integración de "Reportar punto" en la vista del Mapa
-
-    Problema actual: El flujo de reporte está suelto por toda la app y la pantalla actual de Puntos Verdes se ve desordenada y saturada.
-
-    Solución: La opción para reportar o agregar un punto de reciclaje debe vivir exclusivamente dentro de la vista del Mapa (en la sección Puntos Verdes). Aunque el mapa interactivo aún no esté implementado, deja creada y maquetada la plantilla/contenedor del mapa en esa vista, integrando allí el botón principal para abrir el formulario de "Reportar punto".
-
-5. Modernización visual (Estilo Glassmorphism / Bordes redondeados)
-
-    Problema actual: Los menús desplegables (como el del engranaje) y modales tienen esquinas muy cuadradas, fondos sólidos planos y textos que se cortan (ej. "Selecciona la s..", "Selecciona el bl..").
-
-    Solución: Aplica bordes mucho más redondeados (border-radius amplios) y un acabado semitransparente con desenfoque de fondo (glassmorphism / translucidez) en los popups, menús desplegables, tarjetas y hojas modales para darle un aspecto moderno y pulido. Asegúrate también de corregir los textos truncados en los selectores del formulario de reporte.
+Notas: App Check puede rechazar llamadas en emulador; deja comentado dónde registrar el debug token. Si falta google-services.json, no lo inventes: avísalo en el resumen.

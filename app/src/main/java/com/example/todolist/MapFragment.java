@@ -26,9 +26,25 @@ import java.util.List;
 /** Displays approved campus locations and pending community points with visual differentiation. */
 public class MapFragment extends Fragment implements PointDetailBottomSheetDialogFragment.PointActionListener {
     private final List<RecyclingPoint> points = new ArrayList<>();
+    private final List<String> targetCategories = new ArrayList<>();
     private LinearLayout container;
     private TextView empty, count;
     private String activeFilter;
+
+    private boolean isMapFullscreen = false;
+    private View layoutMapHeader, layoutMapBottomContent, mapTemplateContainer;
+    private android.widget.ImageButton btnMapFullscreen;
+    private androidx.activity.OnBackPressedCallback backCallback;
+
+    public static MapFragment newInstance(@Nullable ArrayList<String> targetCategories) {
+        MapFragment fragment = new MapFragment();
+        if (targetCategories != null && !targetCategories.isEmpty()) {
+            Bundle args = new Bundle();
+            args.putStringArrayList("target_categories", targetCategories);
+            fragment.setArguments(args);
+        }
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -37,6 +53,30 @@ public class MapFragment extends Fragment implements PointDetailBottomSheetDialo
         container = view.findViewById(R.id.pointsContainer);
         empty = view.findViewById(R.id.tvEmptyPoints);
         count = view.findViewById(R.id.tvPointCount);
+
+        layoutMapHeader = view.findViewById(R.id.layoutMapHeader);
+        layoutMapBottomContent = view.findViewById(R.id.layoutMapBottomContent);
+        mapTemplateContainer = view.findViewById(R.id.mapTemplateContainer);
+        btnMapFullscreen = view.findViewById(R.id.btnMapFullscreen);
+
+        if (getArguments() != null && getArguments().containsKey("target_categories")) {
+            ArrayList<String> cats = getArguments().getStringArrayList("target_categories");
+            if (cats != null) targetCategories.addAll(cats);
+        }
+
+        if (btnMapFullscreen != null) {
+            btnMapFullscreen.setOnClickListener(v -> toggleMapFullscreen());
+        }
+
+        backCallback = new androidx.activity.OnBackPressedCallback(false) {
+            @Override
+            public void handleOnBackPressed() {
+                if (isMapFullscreen) {
+                    toggleMapFullscreen();
+                }
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), backCallback);
 
         view.findViewById(R.id.btnMapReportPoint).setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
@@ -168,6 +208,9 @@ public class MapFragment extends Fragment implements PointDetailBottomSheetDialo
         int approvedCount = 0;
         int pendingCount = 0;
 
+        List<RecyclingPoint> priorityList = new ArrayList<>();
+        List<RecyclingPoint> standardList = new ArrayList<>();
+
         for (RecyclingPoint point : points) {
             if ("approved".equals(point.status)) approvedCount++;
             else if ("pending".equals(point.status)) pendingCount++;
@@ -184,9 +227,21 @@ public class MapFragment extends Fragment implements PointDetailBottomSheetDialo
             }
 
             if (matches) {
-                addCard(point);
+                if (pointMatchesCategories(point)) {
+                    priorityList.add(point);
+                } else {
+                    standardList.add(point);
+                }
                 visible++;
             }
+        }
+
+        // Primero los puntos que coinciden con las categorías escaneadas
+        for (RecyclingPoint p : priorityList) {
+            addCard(p, true);
+        }
+        for (RecyclingPoint p : standardList) {
+            addCard(p, false);
         }
 
         String stats = approvedCount + " aprobados · " + pendingCount + " en validación";
@@ -197,7 +252,69 @@ public class MapFragment extends Fragment implements PointDetailBottomSheetDialo
         }
     }
 
+    private void toggleMapFullscreen() {
+        isMapFullscreen = !isMapFullscreen;
+        if (backCallback != null) backCallback.setEnabled(isMapFullscreen);
+
+        if (btnMapFullscreen != null) {
+            btnMapFullscreen.setImageResource(isMapFullscreen ? R.drawable.ic_fullscreen_exit : R.drawable.ic_fullscreen);
+        }
+
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).setBarsVisibility(!isMapFullscreen);
+        }
+
+        float targetAlpha = isMapFullscreen ? 0f : 1f;
+
+        if (layoutMapHeader != null) {
+            layoutMapHeader.animate().alpha(targetAlpha).setDuration(300).withEndAction(() -> {
+                if (isMapFullscreen) layoutMapHeader.setVisibility(View.GONE);
+            }).start();
+            if (!isMapFullscreen) layoutMapHeader.setVisibility(View.VISIBLE);
+        }
+
+        if (layoutMapBottomContent != null) {
+            layoutMapBottomContent.animate().alpha(targetAlpha).setDuration(300).withEndAction(() -> {
+                if (isMapFullscreen) layoutMapBottomContent.setVisibility(View.GONE);
+            }).start();
+            if (!isMapFullscreen) layoutMapBottomContent.setVisibility(View.VISIBLE);
+        }
+
+        if (mapTemplateContainer != null) {
+            int initialHeight = mapTemplateContainer.getHeight();
+            int targetHeight = isMapFullscreen ? Math.round(getResources().getDisplayMetrics().heightPixels * 0.70f) : dp(190);
+
+            android.animation.ValueAnimator heightAnim = android.animation.ValueAnimator.ofInt(initialHeight, targetHeight);
+            heightAnim.setDuration(300);
+            heightAnim.addUpdateListener(anim -> {
+                ViewGroup.LayoutParams params = mapTemplateContainer.getLayoutParams();
+                params.height = (int) anim.getAnimatedValue();
+                mapTemplateContainer.setLayoutParams(params);
+            });
+            heightAnim.start();
+        }
+    }
+
+    private boolean pointMatchesCategories(RecyclingPoint p) {
+        if (targetCategories.isEmpty()) return false;
+        String mat = (p.materials + " " + p.name + " " + p.site).toLowerCase(java.util.Locale.ROOT);
+        for (String cat : targetCategories) {
+            String c = cat.toLowerCase(java.util.Locale.ROOT);
+            if (c.contains("plast") && (mat.contains("plást") || mat.contains("plast") || mat.contains("pet") || mat.contains("botella"))) return true;
+            if (c.contains("vidr") && (mat.contains("vidr") || mat.contains("cristal"))) return true;
+            if (c.contains("papel") && (mat.contains("papel") || mat.contains("cartón") || mat.contains("carton"))) return true;
+            if (c.contains("organ") && (mat.contains("orgán") || mat.contains("organ") || mat.contains("comida"))) return true;
+            if (c.contains("metal") && (mat.contains("metal") || mat.contains("lata") || mat.contains("alumin"))) return true;
+            if (c.contains("peligr") && (mat.contains("comput") || mat.contains("electr") || mat.contains("bombill") || mat.contains("pila"))) return true;
+        }
+        return false;
+    }
+
     private void addCard(RecyclingPoint point) {
+        addCard(point, false);
+    }
+
+    private void addCard(RecyclingPoint point, boolean isHighlighted) {
         MaterialCardView card = new MaterialCardView(requireContext());
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -209,7 +326,12 @@ public class MapFragment extends Fragment implements PointDetailBottomSheetDialo
 
         boolean isPending = "pending".equals(point.status);
         card.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.surface_card));
-        card.setStrokeColor(isPending ? 0xFFFFB74D : ContextCompat.getColor(requireContext(), R.color.unisimon_green_light));
+        if (isHighlighted) {
+            card.setStrokeColor(0xFF00A859);
+            card.setStrokeWidth(dp(2));
+        } else {
+            card.setStrokeColor(isPending ? 0xFFFFB74D : ContextCompat.getColor(requireContext(), R.color.unisimon_green_light));
+        }
 
         LinearLayout body = new LinearLayout(requireContext());
         body.setOrientation(LinearLayout.VERTICAL);
@@ -221,6 +343,21 @@ public class MapFragment extends Fragment implements PointDetailBottomSheetDialo
         header.setGravity(android.view.Gravity.CENTER_VERTICAL);
 
         TextView name = text(point.name, 16, R.color.text_primary, true);
+        name.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+
+        if (isHighlighted) {
+            TextView matchBadge = new TextView(requireContext());
+            matchBadge.setPadding(dp(6), dp(2), dp(6), dp(2));
+            matchBadge.setTextSize(9);
+            matchBadge.setTypeface(null, 1);
+            matchBadge.setText("⭐ Coincide");
+            matchBadge.setTextColor(0xFF00562A);
+            matchBadge.setBackgroundColor(0xFFDCFCE7);
+            LinearLayout.LayoutParams mbParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            mbParams.rightMargin = dp(6);
+            matchBadge.setLayoutParams(mbParams);
+            header.addView(matchBadge);
+        }
         name.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
 
         TextView badge = new TextView(requireContext());
