@@ -1,11 +1,14 @@
-Proyecto Android (Java) "EcoScan". Existen las pantallas "Escanear" (preview de cámara con marco punteado, botones "Tomar Foto" y "Demo IA", chips de ejemplo) y "Puntos Verdes" (tarjeta de mapa interactivo del campus, botón "Reportar punto", filtros, lista de puntos). Haz SOLO lo siguiente.
+CONTINUACIÓN: otro agente ya empezó este trabajo y se cortó a la mitad. Estás en la rama escaner-multiobjeto. ANTES de escribir código: corre `git diff main --stat` y revisa solo los archivos tocados para ver qué puntos de la lista ya están hechos, cuáles a medias y cuáles faltan. No rehagas lo que ya funciona. Termina lo pendiente y responde con máximo 10 líneas: qué ya estaba hecho, qué completaste y qué falta.
+
+Proyecto Android (Java) "EcoScan". Existen las pantallas "Escanear" (preview de cámara con marco punteado, botones "Tomar Foto" y "Demo IA", chips de ejemplo) y "Puntos Verdes" (tarjeta de mapa interactivo del campus, botón "Reportar punto", filtros, lista de puntos).
 
 REGLAS DE AHORRO (obligatorias):
 - No leas el proyecto completo. Abre solo los archivos de Escanear, Puntos Verdes, sus layouts, la activity/navegación principal, build.gradle y AndroidManifest.
 - No refactorices, no cambies UI/estilos fuera de lo pedido, no escribas tests ni docs.
 - Sin dependencias nuevas salvo las listadas. Animaciones con APIs nativas (ValueAnimator/ObjectAnimator/ViewPropertyAnimator), nada de Lottie.
-- Trabaja en una rama/copia nueva; no toques el login de Microsoft/MSAL.
-- Responde al final con máximo 10 líneas: archivos tocados + qué falta (ej. google-services.json). Sin explicar el código.
+- NO ejecutes gradle ni intentes compilar; yo compilo desde IntelliJ. No cambies versiones de Gradle, AGP, JDK ni compileOptions. Revisa tu código a ojo (imports, nombres, tipos).
+- No toques el login de Microsoft/MSAL ni la configuración de Firebase. No hagas git push ni merge a main.
+- Sin explicar el código en la respuesta final.
 
 1) CLASIFICADOR HÍBRIDO MULTI-OBJETO
 Interfaz `WasteClassifier { void classify(Bitmap bmp, Callback cb); }` donde el callback entrega `List<ClassificationResult>` (0 a 6 objetos).
@@ -23,7 +26,7 @@ ML Kit Object Detection (com.google.mlkit:object-detection, modo SINGLE_IMAGE, m
 - Por objeto: si confianza < 0.7 se muestra con estado "No estoy seguro" (borde gris punteado + botón "Elegir categoría") en vez de descartarlo. Si la lista queda vacía o TODOS son < 0.7 → estado NO_RECONOCIDO.
 - Antes de clasificar, calcula luminancia media del bitmap (muestreando píxeles). Si < 60/255 → estado POCA_LUZ sin llamar al modelo.
 - ANALIZANDO: foto congelada + línea de escaneo verde que barre de arriba a abajo en loop + pulso suave en el marco punteado. Cancelable.
-- RESULTADO: dibuja sobre la foto un recuadro por objeto con número y color según bolsa (blanca=gris claro/blanco, negra=negro, verde=verde), aparecen con pop-in escalonado (60 ms entre cada uno). Debajo, lista de tarjetas (una por objeto): número, nombre, categoría, "Bolsa blanca/negra/verde", cómo desechar. Tocar un recuadro resalta su tarjeta y viceversa. Si hay varios, encabezado "Encontré N objetos".
+- RESULTADO: dibuja sobre la foto un recuadro por objeto con número y color según bolsa (blanca=gris claro/blanco, negra=negro, verde=verde), con pop-in escalonado (60 ms entre cada uno). Debajo, lista de tarjetas (una por objeto): número, nombre, categoría, "Bolsa blanca/negra/verde", cómo desechar. Tocar un recuadro resalta su tarjeta y viceversa. Si hay varios, encabezado "Encontré N objetos".
 - POCA_LUZ: ícono bombilla/luna con pulso, texto "Hay poca luz. Acércate a una ventana o activa el flash", botón flash (torch) y "Reintentar".
 - NO_RECONOCIDO: el marco hace "shake" corto, ícono de interrogación con fade-in, texto "No pude identificarlo. Prueba con pocos objetos, más cerca y con buena luz", botones "Reintentar" y "Elegir categoría manual" (diálogo con las 7 categorías).
 - Animaciones 300-1200 ms, sin bloquear la UI; cancelarlas al salir de la pantalla.
