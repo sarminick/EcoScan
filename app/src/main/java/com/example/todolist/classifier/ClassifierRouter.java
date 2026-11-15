@@ -59,7 +59,17 @@ public class ClassifierRouter implements WasteClassifier {
 
     @Override
     public void classify(Bitmap bmp, Callback cb) {
-        classify(bmp, (results, isOffline, message) -> cb.onResult(results));
+        classify(bmp, new RouterCallback() {
+            @Override
+            public void onResult(java.util.List<ClassificationResult> results, boolean isOffline, @androidx.annotation.Nullable String message) {
+                cb.onResult(results);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                cb.onError(t);
+            }
+        });
     }
 
     public void classify(Bitmap bmp, RouterCallback cb) {

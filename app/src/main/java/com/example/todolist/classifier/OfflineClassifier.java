@@ -69,7 +69,7 @@ public class OfflineClassifier implements WasteClassifier {
                 "Deposita en la caneca negra de residuos no aprovechables.", "Residuo ordinario no aprovechable");
 
         // Plastic
-        for (String k : new String[]{"bottle", "botella", "plastic", "plástico", "plastico", "cup", "vaso", "jug", "container", "packaging", "water bottle"}) {
+        for (String k : new String[]{"bottle", "botella", "plastic", "plástico", "plastico", "cup", "vaso", "jug", "container", "packaging", "water bottle", "drinkware", "beverage", "drink"}) {
             STATIC_MAP.put(k, plastic);
         }
         // Glass

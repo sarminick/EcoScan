@@ -217,7 +217,7 @@ public class ScanFragment extends Fragment {
         if (camera != null && camera.getCameraInfo().hasFlashUnit()) {
             isTorchOn = !isTorchOn;
             camera.getCameraControl().enableTorch(isTorchOn);
-            btnScanFlash.setImageResource(isTorchOn ? R.drawable.ic_flash_off : R.drawable.ic_flash_on);
+            btnScanFlash.setImageResource(R.drawable.ic_flash_on);
             if (btnPocaLuzFlash != null) {
                 btnPocaLuzFlash.setText(isTorchOn ? "Apagar flash" : "Activar flash");
             }
@@ -459,7 +459,7 @@ public class ScanFragment extends Fragment {
 
         if (cardSuggestReport != null) {
             cardSuggestReport.setVisibility(View.VISIBLE);
-            view.findViewById(R.id.btnSuggestReport).setOnClickListener(v -> {
+            cardSuggestReport.findViewById(R.id.btnSuggestReport).setOnClickListener(v -> {
                 if (getActivity() instanceof MainActivity && !results.isEmpty()) {
                     ((MainActivity) getActivity()).openReportBottomSheet(results.get(0).categoria);
                 }
@@ -677,7 +677,7 @@ public class ScanFragment extends Fragment {
         data.put("fuente", fuente);
         data.put("timestamp", FieldValue.serverTimestamp());
 
-        FirebaseGateway.firestore().collection("feedback_scan").add(data);
+        FirebaseGateway.db().collection("feedback_scan").add(data);
     }
 
     private void showManualCategoryDialog(@Nullable ClassificationResult target) {
